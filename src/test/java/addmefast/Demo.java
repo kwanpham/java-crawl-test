@@ -36,7 +36,7 @@ public class Demo {
         ops.addArguments("--disable-notifications");
         ops.addArguments("start-maximized");
         ops.addArguments("disable-infobars");
-        ops.addArguments("--user-data-dir=F:\\Profile");  //đường đẫn đến profile
+       // ops.addArguments("--user-data-dir=F:\\Profile");  //đường đẫn đến profile
         ops.addArguments("profile-directory=Profile 1");
         //    ops.addArguments("headless");               // chạy ngầm
         // ops.addArguments("window-size=1200x600"); // set kích thước

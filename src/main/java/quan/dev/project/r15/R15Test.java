@@ -18,6 +18,7 @@ public class R15Test {
         Element productDetailsPage = docMain.getElementsByClass("product-details-page").get(0);
 
         String titleMovile = productDetailsPage.getElementsByTag("cite").get(0).text();
+        System.out.println(titleMovile);
 
         Element productDetails = productDetailsPage.getElementsByClass("product-details").get(0);
 
@@ -31,6 +32,14 @@ public class R15Test {
         Element productBox = productDetails.getElementsByClass("product-box").get(0);
 
         getDataProductBox(productBox);
+
+        String detailSinglePicture = productDetailsPage.getElementsByClass("detail-single-picture").get(0).getElementsByTag("img").get(0).attr("src");
+        System.out.println(detailSinglePicture);
+
+        Elements previewGrid = productDetailsPage.getElementsByClass("preview-grid").get(0).getElementsByTag("li");
+        getSmailImage(previewGrid);
+
+
 
     }
 
@@ -63,6 +72,13 @@ public class R15Test {
             System.out.println(a.text());
         }
 
+    }
+
+    private static void getSmailImage(Elements previewGrid) {
+        for (Element a : previewGrid) {
+            System.out.println(a.getElementsByTag("img").first().attr("data-original"));
+            System.out.println(a.attr("href"));
+        }
     }
 
 
