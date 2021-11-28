@@ -36,6 +36,7 @@ public class Demo {
         ops.addArguments("--disable-notifications");
         ops.addArguments("start-maximized");
         ops.addArguments("disable-infobars");
+        ops.setBinary("C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe");
        // ops.addArguments("--user-data-dir=F:\\Profile");  //đường đẫn đến profile
         ops.addArguments("profile-directory=Profile 1");
         //    ops.addArguments("headless");               // chạy ngầm
