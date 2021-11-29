@@ -24,13 +24,12 @@ public class BraveDemo {
         ChromeOptions ops = new ChromeOptions()
                 .setBinary("C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"); // this is just example
 
-
+        ops.addArguments("--no-sandbox");
         ops.addArguments("--disable-notifications");
         ops.addArguments("start-maximized");
         ops.addArguments("disable-infobars");
-        //ops.setBinary("C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe");
-        // ops.addArguments("--user-data-dir=F:\\Profile");  //đường đẫn đến profile
-        ops.addArguments("profile-directory=Profile 1");
+        ops.addArguments("--user-data-dir=C:\\Users\\Administrator\\AppData\\Local\\BraveSoftware\\Brave-Browser\\temp");  //đường đẫn đến profile
+        ops.addArguments("profile-directory=fb-profile");
            // ops.addArguments("headless");               // chạy ngầm
         // ops.addArguments("window-size=1200x600"); // set kích thước
 
@@ -50,12 +49,12 @@ public class BraveDemo {
     @Test
     void test() throws Exception {
         // Exercise
-        driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
+        driver.get("https://www.facebook.com/Xomvuichoi1368/posts/103095191629493");
         String title = driver.getTitle();
 
         this.takeSnapShot(driver, "image/test.png");
         // Verify
-        assert (title).contains("Selenium WebDriver");
+        assert (title).contains("Facebook – log in or sign up");
     }
 
     public void takeSnapShot(WebDriver webdriver, String fileWithPath) throws Exception {

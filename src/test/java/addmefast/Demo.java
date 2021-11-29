@@ -1,5 +1,6 @@
 package addmefast;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -26,19 +27,21 @@ import java.util.concurrent.TimeUnit;
  * Created by https://github.com/kwanpham
  */
 public class Demo {
-    private ChromeDriver driver;
+
+    private WebDriver driver;
 
     @BeforeClass
     public void beforeClass() {
         // Khởi tạo trình duyệt Firefox
-        System.setProperty("webdriver.chrome.driver", "driver/chromedriver.exe");
+        WebDriverManager.chromedriver().setup();
         ChromeOptions ops = new ChromeOptions();
         ops.addArguments("--disable-notifications");
         ops.addArguments("start-maximized");
         ops.addArguments("disable-infobars");
-        ops.setBinary("C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe");
-       // ops.addArguments("--user-data-dir=F:\\Profile");  //đường đẫn đến profile
-        ops.addArguments("profile-directory=Profile 1");
+        ops.addArguments("--no-sandbox");
+
+        ops.addArguments("--user-data-dir=D:\\Profile");  //đường đẫn đến profile
+        ops.addArguments("profile-directory=Profile 3");
         //    ops.addArguments("headless");               // chạy ngầm
         // ops.addArguments("window-size=1200x600"); // set kích thước
 
@@ -49,9 +52,9 @@ public class Demo {
 
     @Test
     public void openBrowser1() {
-        driver.navigate().to("http://google.com.vn");
+        driver.navigate().to("http://fb.com");
         Dimension size = new Dimension(1024, 768);
-        driver.manage().window().setSize(size);
+      //  driver.manage().window().setSize(size);
     }
 
     @Test
@@ -162,7 +165,7 @@ public class Demo {
 
     @AfterTest
     public void close() {
-        driver.close();
+        //driver.close();
     }
 
 
