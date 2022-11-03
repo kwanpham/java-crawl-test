@@ -16,6 +16,7 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -41,9 +42,12 @@ public class HaisantuanbeoUpload {
     @Test
     public void uploadImageToHaSanTuanBeo() throws IOException {
 
-        File file = new File("tmp/image/52457003_tom-van-bien-quang-ninh-hai-san.jpg");
+        String imageUrl = "http://fashion3.ninhbinhweb.biz/wp-content/uploads/2020/03/icon-messenger.png.pagespeed.ce_.sSebhnGGgP.png";
+        BufferedImage image = ImageIO.read(new URL(imageUrl.replaceAll(" ", "%20")));
+        ImageIO.write(image, FilenameUtils.getExtension(imageUrl), new File("tmp/image/" + FilenameUtils.getName(imageUrl)));
+
         String mime = "";
-        String extension = FilenameUtils.getExtension(file.getName());
+        String extension = FilenameUtils.getExtension(imageUrl);
         if (extension.equalsIgnoreCase("png")) {
             mime = "image/png";
         }
@@ -54,7 +58,7 @@ public class HaisantuanbeoUpload {
         CloseableHttpClient client = HttpClients.createDefault();
 
         HttpEntity entity = MultipartEntityBuilder.create()
-                .addBinaryBody("file", Files.newInputStream(file.toPath()), ContentType.create(mime), file.getName())
+                .addBinaryBody("file", Files.newInputStream(Paths.get("tmp/image/" + FilenameUtils.getName(imageUrl))), ContentType.create(mime), FilenameUtils.getName(imageUrl))
                 .build();
 
         HttpPost httpPost = new HttpPost("https://haisantuanbeo.com/wp-json/wp/v2/media");
@@ -73,8 +77,8 @@ public class HaisantuanbeoUpload {
     public void crawlProductFromHaisaiquangninhToHaisantuanbeo() throws IOException, ParseException {
 
 
-        for (int i = 1; i <= 3; i++) {
-            Document docMain = Jsoup.connect(String.format("http://haisanquangninh.org/danhmuc/Hai-san-tuoi-song/2/p_%d.html", i)).get();
+        for (int i = 1; i <= 1; i++) {
+            Document docMain = Jsoup.connect(String.format("http://haisanquangninh.org/danhmuc/Hai-san-kho/1.html")).get();
 
             Element productWrapper = docMain.getElementsByClass("product-wrapper").get(0);
 
@@ -89,6 +93,21 @@ public class HaisantuanbeoUpload {
                 String productTile = detailProduct.getElementsByTag("h1").get(0).text();
                 log.info(productTile);
 
+//                String result = Jsoup.connect("https://haisantuanbeo.com/wp-json/wc/v3/products?search="+productTile)
+//                        .header("Content-Type", "application/json")
+//                        .header("Accept", "application/json")
+//                        .followRedirects(true)
+//                        .ignoreHttpErrors(true)
+//                        .ignoreContentType(true)
+//                        .userAgent("Mozilla/5.0 AppleWebKit/537.36 (KHTML," +
+//                                " like Gecko) Chrome/45.0.2454.4 Safari/537.36")
+//                        .header("Authorization", "Basic Y2tfZmZmZGFlMTliOTA0N2U4ZGE4MjgxNzcyNmZiZTU4YzBlZmI4OTcxMzpjc18wN2NjZTkwZTIzNjRmY2M5MTFiNzVkMWE1NjUzZDRjM2FmZDJlMGZj")
+//                        .method(Connection.Method.GET)
+//                        .execute().body();
+//                log.info("result search " + result);
+//                if (!result.equals("[]")) {
+//                    continue;
+//                }
 
 
                 String productPrice = detailProduct.getElementsByClass("product_price").get(0).text();
@@ -116,11 +135,8 @@ public class HaisantuanbeoUpload {
                     imageUrl = "http://haisanquangninh.org/" + imageUrl;
                 }
 
-                URL url = new URL(imageUrl);
-                URLConnection connection = url.openConnection();
-                connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-                connection.connect();
-                BufferedImage image = ImageIO.read(connection.getInputStream());
+
+                BufferedImage image = ImageIO.read(new URL(imageUrl.replaceAll(" ", "%20")));
                 ImageIO.write(image, FilenameUtils.getExtension(imageUrl), new File("tmp/image/" + FilenameUtils.getName(imageUrl)));
 
                 File file = new File("tmp/image/" + FilenameUtils.getName(imageUrl));
@@ -147,6 +163,7 @@ public class HaisantuanbeoUpload {
                 log.info("--------------------------------------------------------");
                 log.info(content);
 
+
                 JsonNode responseImageNode = new ObjectMapper().readTree(content);
                 String newImageUrl = JsonUtils.getStringVal(responseImageNode , "/guid/raw");
                 log.info("newImageUrl: " + newImageUrl);
@@ -169,6 +186,10 @@ public class HaisantuanbeoUpload {
                 if (productTileLower.contains("nghêu") || productTileLower.contains("sò") || productTileLower.contains("ốc")) {
                     category = 75;
                 }
+                if (productTileLower.contains("tôm") || productTileLower.contains("bề bề")) {
+                    category = 72;
+                }
+
 
                 JsonUtils.setVal(productRequestNode , "/name" , productTile);
                 JsonUtils.setVal(productRequestNode , "/type" , "simple");
